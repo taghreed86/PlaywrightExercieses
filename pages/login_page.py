@@ -10,3 +10,9 @@ class Login:
 
     def get_continue_button(self):
         return self.page.get_by_role("button", name="CONTINUE")
+
+    def get_account_settings_menu(self):
+        return self.page.locator("xpath=//button[@title='Account settings']")
+
+    def get_logout_button(self):
+        return self.page.get_by_text("Logout")
