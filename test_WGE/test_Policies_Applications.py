@@ -1,12 +1,17 @@
 from playwright.sync_api import Playwright, sync_playwright, expect
 from pages.policies_page import Policies
 from pages.application_page import Applications
+from pages.login_page import Login
 
 
-def run(playwright: Playwright) -> None:
+def test_run(playwright: Playwright) -> None:
+
     browser = playwright.chromium.launch(headless=False, slow_mo=1000)
     context = browser.new_context()
     page = context.new_page()
+
+    login_page = Login(page)
+
     page.wait_for_load_state("networkidle")
     page.set_default_timeout(10000)
     # page.pause()
@@ -15,11 +20,11 @@ def run(playwright: Playwright) -> None:
     # page.get_by_placeholder("Username").fill("wego-admin")
     # playwright.selectors.set_test_id_attribute("id")
     # page.get_by_test_id("email").click()
-    page.locator("id=email").click()
-    page.locator("id=email").fill("wego-admin")
-    page.get_by_placeholder("Password").click()
-    page.get_by_placeholder("Password").fill(">ch2yU5@]F8U6IZkX?Q#")
-    page.get_by_role("button", name="CONTINUE").click()
+
+    login_page.get_user_name_textbox().fill("wego-admin")
+
+    login_page.get_password_textbox().fill(">ch2yU5@]F8U6IZkX?Q#")
+    login_page.get_continue_button().click()
     expect(page).to_have_url("https://demo-01.wge.dev.weave.works/clusters/list")
 
     policies_page = Policies(page)
@@ -64,5 +69,5 @@ def run(playwright: Playwright) -> None:
     browser.close()
 
 
-with sync_playwright() as playwright:
-    run(playwright)
+# with sync_playwright() as playwright:
+#     run(playwright)
