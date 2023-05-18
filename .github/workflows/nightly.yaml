@@ -39,4 +39,4 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: run tests
       run: |
-        pytest -s -v
+        pytest -s -v --video=retain-on-failure --screenshot=only-on-failure
