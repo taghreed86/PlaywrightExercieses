@@ -5,14 +5,16 @@ from pages.login_page import Login
 
 @pytest.fixture(scope="session")
 def setup(playwright: Playwright):
-    browser = playwright.chromium.launch(headless=False, slow_mo=1000)
+    browser = playwright.chromium.launch(slow_mo=1000)
     context = browser.new_context()
     page = context.new_page()
     page.wait_for_load_state("networkidle")
+    context.tracing.start(screenshots=True, snapshots=True, sources=True)
     page.goto("https://demo-01.wge.dev.weave.works/sign_in")
     page.set_default_timeout(5000)
 
     yield page
+    context.tracing.stop(path="../execution-tracing.zip")
     page.close()
     context.close()
     browser.close()
