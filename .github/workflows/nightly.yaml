@@ -41,3 +41,8 @@ jobs:
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure
+    - name: Save trace viewer result
+      uses: actions/upload-artifact@v3
+      with:
+          name: trace-viewer-result
+          path: ../test-results/execution-tracing.zip

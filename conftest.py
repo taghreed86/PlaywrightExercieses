@@ -19,7 +19,7 @@ def setup(playwright: Playwright):
     page.set_default_timeout(5000)
 
     yield page
-    context.tracing.stop(path="../execution-tracing.zip")
+    context.tracing.stop(path="../test-results/execution-tracing.zip")
     page.close()
     context.close()
     browser.close()
