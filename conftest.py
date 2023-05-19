@@ -1,6 +1,11 @@
+import os
+
 from playwright.sync_api import Playwright, sync_playwright, expect
 import pytest
 from pages.login_page import Login
+
+user_name = os.environ["USER_NAME"]
+password = os.environ["PASSWORD"]
 
 
 @pytest.fixture(scope="session")
@@ -24,8 +29,8 @@ def setup(playwright: Playwright):
 def login(setup):
     page = setup
     login_page = Login(page)
-    login_page.get_user_name_textbox().fill("wego-admin")
-    login_page.get_password_textbox().fill(">ch2yU5@]F8U6IZkX?Q#")
+    login_page.get_user_name_textbox().fill(user_name)
+    login_page.get_password_textbox().fill(password)
     login_page.get_continue_button().click()
     expect(page).to_have_url("https://demo-01.wge.dev.weave.works/clusters/list")
     yield page
