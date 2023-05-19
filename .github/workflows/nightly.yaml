@@ -45,4 +45,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
           name: trace-viewer-result
-          path: ../test-results/execution-tracing.zip
+          path: test-results/execution-tracing.zip
