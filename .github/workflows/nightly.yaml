@@ -46,11 +46,12 @@ jobs:
       with:
           name: trace-viewer-result
           path: test-results/execution-tracing.zip
-    - name: Slack notification of tests result
+    - name: Slack notification for tests result
       if: ${{ (inputs.slack-notification) && (github.event_name != 'workflow_dispatch') }}
       id: slack
-      uses: slackapi/slack-github-action@v1.23.0
+      uses: slackapi/slack-github-action@v1.24.0
       with:
+        channel-id: C058RPVS5DZ
         slack-message: "*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
       env:
          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
