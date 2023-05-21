@@ -52,6 +52,6 @@ jobs:
       uses: slackapi/slack-github-action@v1.24.0
       with:
         channel-id: C058RPVS5DZ
-        slack-message: "*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
+        slack-message: "*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed \nView in Github: ${{ github.event.workflow_run.jobs_url }}"
       env:
          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
