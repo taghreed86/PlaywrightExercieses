@@ -41,7 +41,7 @@ jobs:
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure && STATUS="SUCCESS" || STATUS="FAILURE"
-        python ../slack-notification.py "$STATUS" "$CIRCLE_BRANCH" "$BUILD_URL"
+        python ../slack_notification.py "$STATUS" "$CIRCLE_BRANCH" "$BUILD_URL"
     - name: Save trace viewer result
       uses: actions/upload-artifact@v3
       with:
