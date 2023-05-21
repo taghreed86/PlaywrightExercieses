@@ -50,8 +50,20 @@ jobs:
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
       with:
-        slack-color: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-        slack-message: "*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
+        # For posting a rich message using Block Kit
+        payload: |
+          {
+            "text": "Tests result: *${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "Tests result: *${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
+                }
+              }
+            ]
+          }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
