@@ -11,7 +11,7 @@ PASSWORD = os.environ["PASSWORD"]
 
 @pytest.fixture(scope="session")
 def setup(playwright: Playwright):
-    browser = playwright.chromium.launch(headless=False, slow_mo=1000)
+    browser = playwright.chromium.launch(slow_mo=1000)
     context = browser.new_context()
     page = context.new_page()
     page.wait_for_load_state("networkidle")
