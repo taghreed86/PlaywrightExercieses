@@ -18,22 +18,31 @@ def setup(playwright: Playwright):
     context.tracing.start(screenshots=True, snapshots=True, sources=True)
     page.goto(URL)
     page.set_default_timeout(5000)
+    login_page = Login(page)
+    login_page.get_user_name_textbox().fill(USER_NAME)
+    login_page.get_password_textbox().fill(PASSWORD)
+    login_page.get_continue_button().click()
+    expect(page).to_have_url("https://demo-01.wge.dev.weave.works/clusters/list")
 
-    yield page
+    yield context
     context.tracing.stop(path="../test-results/execution-tracing.zip")
     page.close()
     context.close()
     browser.close()
 
 
+
 @pytest.fixture(scope="class")
 def login(setup):
-    page = setup
-    login_page = Login(page)
-    login_page.get_user_name_textbox().fill(USER_NAME)
-    login_page.get_password_textbox().fill(PASSWORD)
-    login_page.get_continue_button().click()
-    expect(page).to_have_url("https://demo-01.wge.dev.weave.works/clusters/list")
+    context = setup
+    page = context.new_page()
+    page.goto(URL)
+    # login_page = Login(page)
+    # login_page.get_user_name_textbox().fill(USER_NAME)
+    # login_page.get_password_textbox().fill(PASSWORD)
+    # login_page.get_continue_button().click()
+    # expect(page).to_have_url("https://demo-01.wge.dev.weave.works/clusters/list")
     yield page
-    login_page.get_account_settings_menu().click()
-    login_page.get_logout_button().click()
+    # login_page.get_account_settings_menu().click()
+    # login_page.get_logout_button().click()
+
