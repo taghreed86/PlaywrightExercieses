@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '30 0 * * 0,6'
+    - cron: '30 1 * * *'
 
 permissions:
   contents: read
@@ -41,28 +41,22 @@ jobs:
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure
-    - name: Save trace viewer result
-      uses: actions/upload-artifact@v3
+    - name: Download test artifacts
+      uses: actions/download-artifact@v3.0.1
       with:
-          name: trace-viewer-result
-          path: test-results/execution-tracing.zip
-#    - name: Slack notification for tests result
-#      if: ${{ (inputs.slack-notification) && (github.event_name != 'workflow_dispatch') }}
-#      id: slack
-#      uses: slackapi/slack-github-action@v1.24.0
-#      with:
-#        channel-id: C058RPVS5DZ
-#        slack-message: "*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed \nView in Github: ${{ github.event.workflow_run.jobs_url }}"
-#      env:
-#         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        path: ${{ env.TEST_RESULTS_PATH }}
+    - name: Publish Test Report
+      id: test-report
+      uses: mikepenz/action-junit-report@v3.5.2
+      if: always()
+      with:
+        report_paths: ${{ env.TEST_RESULTS_PATH }}/**/${{ inputs.junit-results-glob-pattern }}
+        check_name: ${{ inputs.check-name }}
     - name: Send test results to Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
       with:
         channel-id: C058RPVS5DZ
-        #slack-message: "Test results: \n*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
-
-        # For posting a rich message using Block Kit
         payload: |
           {
             "blocks": [
