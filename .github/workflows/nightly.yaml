@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '30 1 * * *'
+    - cron: "0 1 * * *"
 
 permissions:
   contents: read
@@ -41,17 +41,12 @@ jobs:
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --html=report.html -o junit_family=xunit2 --junitxml=test-results/junit_report-policies_application_violations_test.xml --self-contained-html
-    - name: Archive test results
-      uses: actions/upload-artifact@v3
+    - name: Publish Test Report
+      id: test-report
+      uses: mikepenz/action-junit-report@v3.5.2
+      if: always()
       with:
-        name: test-result-report
-        path: test_weave_gitops_enterprise/test-results/report.html
-#    - name: Publish Test Report
-#      id: test-report
-#      uses: mikepenz/action-junit-report@v3.5.2
-#      if: always()
-#      with:
-#        report_paths: ${{ env.TEST_RESULTS_PATH }}/**/${{ env.inputs.junit-results-glob-pattern }}
+        report_paths: test_weave_gitops_enterprise/test-results
     - name: Send test results to Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
@@ -64,7 +59,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Test results: \n**********\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed\nView test results in Github: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  "text": "Test results: \n************\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed\nView test results in Github: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                 }
               }
             ]
