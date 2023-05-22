@@ -46,18 +46,18 @@ jobs:
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --html=report.html -o junit_family=xunit2 --junitxml=test-results/junit_report-policies_application_violations_test.xml --self-contained-html
-    - name: Download test artifacts
-      uses: actions/download-artifact@v3.0.1
-      with:
-        path: ${{ env.TEST_RESULTS_PATH }}
+#    - name: Download test artifacts
+#      uses: actions/download-artifact@v3.0.1
+#      with:
+#        path: ${{ env.TEST_RESULTS_PATH }}
     - name: Publish Test Report
       id: test-report
       uses: mikepenz/action-junit-report@v3.5.2
       if: always()
       with:
 
-        report_paths: ${{ env.TEST_RESULTS_PATH }}/**/${{ env.junit-results-glob-pattern }}
-        check_name: ${{ env.check-name }}
+        report_paths: ${{ env.TEST_RESULTS_PATH }}/**/${{ env.inputs.junit-results-glob-pattern }}
+        check_name: ${{ env.inputs.check-name }}
 
     - name: Send test results to Slack
       id: slack
@@ -71,7 +71,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Test results: \n*${{env.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed\nView test results in Github: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  "text": "Test results: \n*${{env.inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed\nView test results in Github: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                 }
               }
             ]
