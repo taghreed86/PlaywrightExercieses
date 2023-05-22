@@ -63,19 +63,19 @@ jobs:
         slack-message: "Test results: \n*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed \nView in Github: ${{ github.event.workflow_run.jobs_url }}"
 
         # For posting a rich message using Block Kit
-#        payload: |
-#          {
-#            "text": "Test results: \n*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed \nView in Github: ${{ github.event.workflow_run.jobs_url }}",
-#            "blocks": [
-#              {
-#                "type": "section",
-#                "text": {
-#                  "type": "mrkdwn",
-#                  "text": "Test results: \n*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed \nView in Github: ${{ github.event.workflow_run.jobs_url }}"
-#                }
-#              }
-#            ]
-#          }
+        payload: |
+          {
+            "text": "View test results in Github: ${{ github.event.workflow_run.url }}",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "View test results in Github: ${{ github.event.workflow_run.url}}"
+                }
+              }
+            ]
+          }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
