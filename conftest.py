@@ -31,18 +31,11 @@ def setup(playwright: Playwright):
     browser.close()
 
 
-
 @pytest.fixture(scope="class")
 def login(setup):
     context = setup
     page = context.new_page()
     page.goto(URL)
-    # login_page = Login(page)
-    # login_page.get_user_name_textbox().fill(USER_NAME)
-    # login_page.get_password_textbox().fill(PASSWORD)
-    # login_page.get_continue_button().click()
-    # expect(page).to_have_url("https://demo-01.wge.dev.weave.works/clusters/list")
     yield page
-    # login_page.get_account_settings_menu().click()
-    # login_page.get_logout_button().click()
+
 
