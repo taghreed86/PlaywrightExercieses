@@ -71,7 +71,7 @@ jobs:
                 "text": {
                   "type": "mrkdwn",
                   "text": "Test results: \n*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed",
-                  "text": "View test results in Github: ${{ https://github.com/taghreed86/PlaywrightExercieses/actions}}"
+                  "text": "View test results in Github: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                 }
               }
             ]
