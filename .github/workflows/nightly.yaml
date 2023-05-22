@@ -46,7 +46,7 @@ jobs:
       uses: mikepenz/action-junit-report@v3.5.2
       if: always()
       with:
-        report_paths: test_weave_gitops_enterprise/test-results/junit_report-policies_application_violations_test.xml
+        report_paths: ./report.html
     - name: Send test results to Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
@@ -59,7 +59,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "Test results: \n************\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.tests}} runs\t\t\t ${{steps.test-report.outputs.tests}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failures}} failed\nView test results in Github: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  "text": "Test results: \n************\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.tests}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed\nView test results in Github: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                 }
               }
             ]
