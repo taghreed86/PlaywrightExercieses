@@ -40,7 +40,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: run tests
       run: |
-        pytest -s -v --video=retain-on-failure --screenshot=only-on-failure
+        pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --html=report.html -o junit_family=xunit2 --junitxml=test-results/junit_report-policies_application_violations_test.xml --self-contained-html
     - name: Download test artifacts
       uses: actions/download-artifact@v3.0.1
       with:
