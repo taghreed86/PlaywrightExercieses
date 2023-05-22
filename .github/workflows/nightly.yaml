@@ -60,12 +60,12 @@ jobs:
       uses: slackapi/slack-github-action@v1.24.0
       with:
         channel-id: C058RPVS5DZ
-        slack-message: "Test results: \n*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed \nView in Github: ${{ github.event.workflow_run.jobs_url }}"
+        #slack-message: "Test results: \n*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
 
         # For posting a rich message using Block Kit
         payload: |
           {
-            "text": "View test results in Github: ${{ github.event.workflow_run.url }}",
+            "text": "Test results: \n*${{inputs.check-name}}*\n>Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed",
             "blocks": [
               {
                 "type": "section",
