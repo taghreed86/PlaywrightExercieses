@@ -25,7 +25,7 @@ def setup(playwright: Playwright):
     expect(page).to_have_url("https://demo-01.wge.dev.weave.works/clusters/list")
 
     yield context
-    context.tracing.stop(path="../test-results/execution-tracing.zip")
+    context.tracing.stop(path="./execution-tracing.zip")
     page.close()
     context.close()
     browser.close()
