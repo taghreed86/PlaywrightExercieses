@@ -64,6 +64,7 @@ jobs:
       if: always()
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
     - name: Send test results to Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
