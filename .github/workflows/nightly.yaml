@@ -26,7 +26,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         pip install pytest_dotenv
-        pip install pytest-html
+        pip install pytest-reporter-html1
     - name: Install playwright and chromium
       run: |
         pip install pytest-playwright
@@ -40,7 +40,28 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: run tests
       run: |
-        pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --html=report.html
+        pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html
+    - name: Test Summary
+      uses: test-summary/action@v2
+      with:
+        paths: "test-results/**/TEST-*.xml"
+        output: test-summary.md
+        show: "all, pass, fail, skip"
+      if: always()
+    - name: Upload test summary
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-summary
+        path: test-summary.md
+      if: always()
+    - name: Notify Slack
+      uses: slackapi/slack-github-action@v1.19.0
+      with:
+        payload: |-
+          {
+            "message": "${{ steps.test_summary.outputs.passed }}/${{ steps.test_summary.outputs.total }} tests passed"
+          }
+      if: always()
     - name: Send test results to Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
