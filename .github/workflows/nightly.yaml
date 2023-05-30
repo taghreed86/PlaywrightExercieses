@@ -55,41 +55,39 @@ jobs:
         path: test-summary.md
       if: always()
     - name: Notify Slack
-      uses: slackapi/slack-github-action@v1.19.0
-      with:
-        payload: |-
-          {
-             "blocks": [
-                 {
-                    "type": "section",
-                    "text": {
-                        "type": "mrkdwn",
-                        "text": "${{ steps.test_summary.outputs.passed }}/${{ steps.test_summary.outputs.total }} tests passed"
-                    }
-                 }
-            ]
-          }
-      if: always()
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-    - name: Send test results to Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
       with:
         channel-id: C058RPVS5DZ
         payload: |
           {
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "Test results: \n************\n>${{ job.status }}\nView test results in Github: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                }
-              }
-            ]
+          	"blocks": [
+          		{
+          			"type": "section",
+          			"text": {
+          				"type": "mrkdwn",
+          				"text": "*Test results: \n*************"
+          			}
+          		},
+          		{
+          			"type": "divider"
+          		},
+          		{
+          			"type": "section",
+          			"text": {
+          				"type": "mrkdwn",
+          				"text": "Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test_summary.outputs.tests}} runs\t\t\t ${{steps.test_summary.outputs.passed}} passed\t\t\t ${{steps.test_summary.outputs.skipped}} skipped\t\t\t  ${{steps.test_summary.outputs.failed}} failed"
+          			},
+          			{
+          			"type": "section",
+          			"text": {
+          				"type": "mrkdwn",
+          				"text": "*View test results on Github:* ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          			}
+          		}
+          	]
           }
+      if: always()
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
