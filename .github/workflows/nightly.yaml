@@ -85,7 +85,7 @@ jobs:
           				"type": "mrkdwn",
           				"text": "*View test results on Github:* ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           			}
-          		},
+          		}
           	]
           }
       if: always()
