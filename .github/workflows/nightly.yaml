@@ -66,7 +66,7 @@ jobs:
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "*Test results: \n*************\n*"
+          				"text": "*Test results:*"
           			}
           		},
           		{
@@ -78,6 +78,9 @@ jobs:
           				"type": "mrkdwn",
           				"text": "Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test_summary.outputs.tests}} runs\t\t\t ${{steps.test_summary.outputs.passed}} passed\t\t\t ${{steps.test_summary.outputs.skipped}} skipped\t\t\t  ${{steps.test_summary.outputs.failed}} failed"
           			}
+          		},
+                {
+          			"type": "divider"
           		},
           		{
           			"type": "section",
