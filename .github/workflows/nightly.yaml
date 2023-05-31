@@ -41,19 +41,6 @@ jobs:
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html --junitxml=test-results/junit_tests_report.xml
-    - name: Test Summary
-      uses: test-summary/action@v2
-      with:
-        paths: "test-results/junit_tests_report.xml"
-        output: test-summary.md
-        show: "all, pass, fail, skip"
-      if: always()
-    - name: Upload test summary
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-summary
-        path: test-summary.md
-      if: always()
     - name: Download test artifacts
       uses: actions/download-artifact@v3.0.1
       with:
