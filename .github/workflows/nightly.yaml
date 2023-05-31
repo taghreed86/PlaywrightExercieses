@@ -47,10 +47,11 @@ jobs:
         path: '/tmp/test-results'
     - name: Publish Test Report
       id: test-report
-      uses: mikepenz/action-junit-report@8223f6a5ba43a36770013d6bac9c3fbfff8f2a6d
+      uses: mikepenz/action-junit-report@@v3
       if: success() || failure()
       with:
         report_paths: '/tmp/test-results/**/test/test-report*.xml'
+        token: ${{ secrets.TEST_REPROT_SECRET }}
     - name: Notify Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
