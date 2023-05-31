@@ -40,11 +40,11 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: run tests
       run: |
-        pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html
+        pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html --junitxml=test-results/junit_tests_report.xml
     - name: Test Summary
       uses: test-summary/action@v2
       with:
-        paths: "test-results/**/TEST-*.xml"
+        paths: "test-results/junit_tests_report.xml"
         output: test-summary.md
         show: "all, pass, fail, skip"
       if: always()
@@ -83,7 +83,7 @@ jobs:
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "*View test results on Github:* ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          				"text": "*View result on Github:* ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           			}
           		}
           	]
