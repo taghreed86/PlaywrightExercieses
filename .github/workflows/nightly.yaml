@@ -54,12 +54,16 @@ jobs:
         name: test-summary
         path: test-summary.md
       if: always()
+    - name: Download test artifacts
+      uses: actions/download-artifact@v3.0.1
+      with:
+        path: '/tmp/test-results'
     - name: Publish Test Report
       id: test-report
       uses: mikepenz/action-junit-report@v3
       if: success() || failure()
       with:
-          report_paths: '**/build/test-results/test/test-report*.xml'
+          report_paths: '/tmp/test-results/**/test/test-report*.xml'
     - name: Notify Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
