@@ -51,7 +51,8 @@ jobs:
       if: success() || failure()
       with:
         report_paths: '/tmp/test-results/**/test/test-report*.xml'
-        token: ${{ secrets.TEST_REPROT_SECRET }}
+      env:
+        TOKEN: ${{ secrets.TEST_REPROT_SECRET }}
     - name: Notify Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
