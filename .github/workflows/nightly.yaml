@@ -58,7 +58,7 @@ jobs:
       with:
         name: Test Report
         path: 'test-results/junit_tests_report*.xml'
-        reporter: dart-json
+        reporter: jest-junit
     - name: Notify Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
