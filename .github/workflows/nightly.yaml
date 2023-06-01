@@ -51,7 +51,6 @@ jobs:
       with:
         name: Publish Test Report
         path: '/tmp/test-results/**/test/test-report*.xml'
-        artifact: test-results
         reporter: jest-junit
     - name: Notify Slack
       id: slack
