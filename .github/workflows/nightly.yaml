@@ -45,11 +45,11 @@ jobs:
       uses: actions/download-artifact@v3.0.1
       with:
         path: '/tmp/test-results'
-    - name: Publish Test Report
+    - uses: dorny/test-reporter@v1.6.0
       id: test-report
-      uses: dorny/test-reporter@v1.6.0
       if: success() || failure()
       with:
+        name: Publish Test Report
         path: '/tmp/test-results/**/test/test-report*.xml'
     - name: Notify Slack
       id: slack
