@@ -47,7 +47,7 @@ jobs:
         path: '/tmp/test-results'
     - name: Publish Test Report
       id: test-report
-      uses: mikepenz/action-junit-report@v3.7.6
+      uses: dorny/test-reporter@v1.6.0
       if: success() || failure()
       with:
         report_paths: '/tmp/test-results/**/test/test-report*.xml'
@@ -63,14 +63,14 @@ jobs:
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "*Test results:*"
+          				"text": "*Test results:*\t*${{steps.test-report.outputs.conclusion}}"
           			}
           		},
           		{
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.total}} runs\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
+          				"text": "Passed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
           			}
           		},
                 {
