@@ -45,6 +45,12 @@ jobs:
       uses: actions/download-artifact@v3.0.1
       with:
         path: 'test-results/'
+    - name: Upload test summary
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-summary
+        path: test-summary.md
+      if: always()
     - name: Publish Test Report
       uses: dorny/test-reporter@v1.6.0
       id: test-report
@@ -52,7 +58,7 @@ jobs:
       with:
         name: Test Report
         path: 'test-results/junit_tests_report*.xml'
-        reporter: java-junit
+        reporter: dart-json
     - name: Notify Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
