@@ -65,14 +65,14 @@ jobs:
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "*Tests result:*\t\t${{steps.test-report.outputs.conclusion}}"
+          				"text": "*Tests result: *${{steps.test-report.outputs.conclusion}}"
           			}
           		},
           		{
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "Passed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\t\t\t ${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
+          				"text": "Passed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
           			}
           		},
                 {
