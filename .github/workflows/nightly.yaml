@@ -40,18 +40,19 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: run tests
       run: |
-        pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html --junitxml=test-results/junit_tests_report.xml
+        pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html -o junit_family=xunit2 --junitxml=test-results/junit_tests_report.xml
     - name: Download test artifacts
       uses: actions/download-artifact@v3.0.1
       with:
-        path: 'test-results'
-    - uses: dorny/test-reporter@v1.6.0
+        path: 'test-results/'
+    - name: Publish Test Report
+      uses: dorny/test-reporter@v1.6.0
       id: test-report
       if: success() || failure()
       with:
-        name: Publish Test Report
-        path: 'test-results/test-report*.xml'
-        reporter: jest-junit
+        name: Test Report
+        path: 'test-results/junit_tests_report.xml'
+        reporter: dotnet-trx
     - name: Notify Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
@@ -64,7 +65,7 @@ jobs:
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "*Test results:*\t*${{steps.test-report.outputs.conclusion}}"
+          				"text": "*Tests result:*\t\t${{steps.test-report.outputs.conclusion}}"
           			}
           		},
           		{
