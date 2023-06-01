@@ -44,13 +44,13 @@ jobs:
     - name: Download test artifacts
       uses: actions/download-artifact@v3.0.1
       with:
-        path: '/tmp/test-results'
+        path: 'test-results'
     - uses: dorny/test-reporter@v1.6.0
       id: test-report
       if: success() || failure()
       with:
         name: Publish Test Report
-        path: '/tmp/test-results/**/test/test-report*.xml'
+        path: 'test-results/test-report*.xml'
         reporter: jest-junit
     - name: Notify Slack
       id: slack
