@@ -51,7 +51,7 @@ jobs:
       if: success() || failure()
       with:
         name: Test Report
-        path: 'test-results/jest-junits*.xml'
+        path: '**/test-results/jest-junits*.xml'
         reporter: jest-junit
     - name: Upload test summary
       uses: actions/upload-artifact@v3
