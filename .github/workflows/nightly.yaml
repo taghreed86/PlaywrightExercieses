@@ -46,11 +46,11 @@ jobs:
 #      with:
 #        path: 'test-results/'
     - name: Upload test summary
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: success() || failure()
       with:
           name: test-results
-          path: jest-junit.xml
+          path: test-results/jest-junit.xml
 
     - name: Publish test report
       uses: dorny/test-reporter@v1.6.0
@@ -61,7 +61,7 @@ jobs:
 #        path: test-results/jest-*.xml
         artifact: test-results
         name: JEST Tests
-        path: '*.xml'
+        path: '**/test-results/*.xml'
         reporter: jest-junit
 
     - name: Notify Slack
