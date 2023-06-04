@@ -62,7 +62,7 @@ jobs:
         artifact: test-results
         name: Tests Report
         path: '**/test-results/*.xml'
-        reporter: xunit2
+        reporter: xUnit
 
     - name: Notify Slack
       id: slack
