@@ -41,17 +41,17 @@ jobs:
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html -o junit_family=xunit2 --junitxml=test-results/junit_tests_report.xml
-#    - name: Download test artifacts
-#      uses: actions/download-artifact@v3.0.1
-#      with:
-#        path: 'test-results/'
+    - name: Download test artifacts
+      uses: actions/download-artifact@v3.0.1
+      with:
+        path: 'test-results/'
     - name: Publish Test Report
       uses: dorny/test-reporter@v1.6.0
       id: test-report
       if: success() || failure()
       with:
         name: Test Report
-        path: reports/jest-*.xml
+        path: test-results/jest-*.xml
         reporter: jest-junit
     - name: Upload test summary
       uses: actions/upload-artifact@v3
