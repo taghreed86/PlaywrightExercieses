@@ -41,16 +41,16 @@ jobs:
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html -o junit_family=xunit2 --junitxml=test-results/junit_tests_report.xml
-    - name: Download test artifacts
-      uses: actions/download-artifact@v3.0.1
-      with:
-        path: 'test-results/'
-    - name: Upload test summary
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-summary
-        path: test-summary.md
-      if: always()
+#    - name: Download test artifacts
+#      uses: actions/download-artifact@v3.0.1
+#      with:
+#        path: 'test-results/'
+#    - name: Upload test summary
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: test-summary
+#        path: test-summary.md
+#      if: always()
     - name: Publish Test Report
       uses: dorny/test-reporter@v1.6.0
       id: test-report
@@ -78,7 +78,7 @@ jobs:
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "Passed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed"
+          				"text": "Passed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\t\t\tTime\n>${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed\t\t\t ${{steps.test-report.outputs.time}} sec."
           			}
           		},
                 {
