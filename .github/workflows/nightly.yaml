@@ -41,24 +41,29 @@ jobs:
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html -o junit_family=xunit2 --junitxml=test-results/junit_tests_report.xml
-    - name: Download test artifacts
-      uses: actions/download-artifact@v3.0.1
+#    - name: Download test artifacts
+#      uses: actions/download-artifact@v3.0.1
+#      with:
+#        path: 'test-results/'
+    - name: Upload test summary
+      uses: actions/upload-artifact@v2
+      if: success() || failure()
       with:
-        path: 'test-results/'
-    - name: Publish Test Report
+          name: test-results
+          path: jest-junit.xml
+
+    - name: Publish test report
       uses: dorny/test-reporter@v1.6.0
       id: test-report
       if: success() || failure()
       with:
-        name: Test Report
-        path: test-results/jest-*.xml
+#        name: Test Report
+#        path: test-results/jest-*.xml
+        artifact: test-results
+        name: JEST Tests
+        path: '*.xml'
         reporter: jest-junit
-    - name: Upload test summary
-      uses: actions/upload-artifact@v3
-      with:
-          name: tests-result-report
-          path: "./test-results/tests-result-report.xml"
-          if: always()
+
     - name: Notify Slack
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
