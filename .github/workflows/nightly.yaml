@@ -61,7 +61,7 @@ jobs:
 #        path: test-results/jest-*.xml
         artifact: test-results
         name: Tests Report
-        path: '**/test-results/*.xml'
+        path: test-results/junit_tests_report.xml
         reporter: java-junit
 
     - name: Notify Slack
