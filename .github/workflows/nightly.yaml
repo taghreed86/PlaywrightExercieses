@@ -50,7 +50,7 @@ jobs:
       if: success() || failure()
       with:
           name: test-results
-          path: test-results/jest-junit.xml
+          path: test-results/junit_tests_report.xml
 
     - name: Publish test report
       uses: dorny/test-reporter@v1.6.0
@@ -60,9 +60,9 @@ jobs:
 #        name: Test Report
 #        path: test-results/jest-*.xml
         artifact: test-results
-        name: JEST Tests
+        name: Tests Report
         path: '**/test-results/*.xml'
-        reporter: jest-junit
+        reporter: xunit2
 
     - name: Notify Slack
       id: slack
