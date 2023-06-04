@@ -60,14 +60,11 @@ jobs:
       working-directory: test-results
 
     - name: Publish test report
-      uses: dorny/test-reporter@v1.6.0
-      id: test-report
+      id: test_summary
+      uses: mikepenz/action-junit-report@v3.7.6
       if: success() || failure()
       with:
-        artifact: test-results
-        name: Tests Report
-        path: test-results/junit_tests_report.xml
-        reporter: jest-Junit
+        report_paths: test-results/junit_tests_report.xml
 
     - name: Notify Slack
       id: slack
@@ -81,14 +78,14 @@ jobs:
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "*Tests result: *${{steps.test-report.outputs.conclusion}}"
+          				"text": "*Tests result:*"
           			}
           		},
           		{
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "Passed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\t\t\tTime\n>${{steps.test-report.outputs.passed}} passed\t\t\t ${{steps.test-report.outputs.skipped}} skipped\t\t\t  ${{steps.test-report.outputs.failed}} failed\t\t\t ${{steps.test-report.outputs.time}} sec."
+          				"text": "Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test_summary.outputs.tests}} runs\t\t\t ${{steps.test_summary.outputs.passed}} passed\t\t\t ${{steps.test_summary.outputs.skipped}} skipped\t\t\t  ${{steps.test_summary.outputs.failed}} failed"
           			}
           		},
                 {
