@@ -85,7 +85,7 @@ jobs:
           			"type": "section",
           			"text": {
           				"type": "mrkdwn",
-          				"text": "Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>executed: ${{steps.test_summary.outputs.total}}\t\t\tpassed: ${{steps.test_summary.outputs.passed}}\t\t\tskipped: ${{steps.test_summary.outputs.skipped}}\t\t\tfailed: ${{steps.test_summary.outputs.failed}}"
+          				"text": "Tests :test_tube:\t\t\tPassed :check:\t\t\tSkipped :arrow_right_hook:\t\t\tFailed :x:\n>${{steps.test_summary.outputs.total}}: executed\t\t\t ${{steps.test_summary.outputs.passed}}: passed\t\t\t ${{steps.test_summary.outputs.skipped}}: skipped\t\t\t  ${{steps.test_summary.outputs.failed}}: failed"
           			}
           		},
                 {
