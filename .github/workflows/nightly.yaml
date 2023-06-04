@@ -46,13 +46,13 @@ jobs:
       uses: actions/upload-artifact@v3
       if: success() || failure()
       with:
-          name: test-results
+          name: test-report
           path: test-results/junit_tests_report.xml
 
     - name: Download test artifacts
       uses: actions/download-artifact@v3.0.1
       with:
-        name: junit_tests_report.xml
+        name: test-report
         path: test-results
 
     - name: Display structure of downloaded files
