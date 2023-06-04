@@ -52,7 +52,7 @@ jobs:
     - name: Download test artifacts
       uses: actions/download-artifact@v3.0.1
       with:
-        name: test-report-artifact
+        name: junit_tests_report.xml
         path: test-results
 
     - name: Display structure of downloaded files
