@@ -64,12 +64,10 @@ jobs:
       id: test-report
       if: success() || failure()
       with:
-#        name: Test Report
-#        path: test-results/jest-*.xml
         artifact: test-results
         name: Tests Report
         path: test-results/junit_tests_report.xml
-        reporter: java-junit
+        reporter: jest-Junit
 
     - name: Notify Slack
       id: slack
