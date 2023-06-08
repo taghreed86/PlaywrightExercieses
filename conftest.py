@@ -31,7 +31,6 @@ def setup(playwright: Playwright):
     browser.close()
 
 
-
 @pytest.fixture(scope="class")
 def login(setup):
     context = setup

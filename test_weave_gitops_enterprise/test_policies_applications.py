@@ -44,9 +44,11 @@ class TestApplications:
         self.applications_page.open_application_violations_tab()
         expect(self.page).to_have_url("https://demo-01.wge.dev.weave.works/kustomization/violations?clusterName=management&name=canaries&namespace=flux-system")
 
+
     def test_open_application_violations_details(self):
         self.applications_page.open_application_violations_details()
-        assert "https://demo-01.wge.dev.weave.works/violations/details?clusterName=management&id=" in self.page .url
+        # assert "https://demo-01.wge.dev.weave.works/violations/details?clusterName=management&id=" in self.page .url
+        assert "https://demo-01.wge.dev.weave.works/policy_violation?clusterName=management&id=" in self.page.url
         expect(self.page .locator("text=Containers Minimum Replica Count in deployment podinfo (1 occurrences)")).to_be_visible()
 
     def test_open_policy_details_from_app_violations_details_page(self):
