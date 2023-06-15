@@ -12,8 +12,11 @@ permissions:
   contents: read
 jobs:
   build_and_test:
-
+  uses: ./.github/workflows/pre_run.yaml
+  with:
     runs-on: ubuntu-latest
+    os-name: linux
+    timeout-minutes: 60
 
     steps:
     - uses: actions/checkout@v3

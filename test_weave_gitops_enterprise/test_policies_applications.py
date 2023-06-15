@@ -17,7 +17,9 @@ class TestPolicies:
 
     def test_open_policy_details_page(self):
         self.policies_page.open_policy_details_page()
-        expect(self.page).to_have_url("https://demo-01.wge.dev.weave.works/policy_details/details?clusterName=management&id=weave.policies.containers-minimum-replica-count&name=Containers%20Minimum%20Replica%20Count")
+        expect(self.page).to_have_url("https://demo-01.wge.dev.weave.works/policy_details/"
+                                      "details?clusterName=management&id=weave.policies."
+                                      "containers-minimum-replica-count&name=Containers%20Minimum%20Replica%20Count")
 
 
 @pytest.mark.usefixtures("login")
@@ -33,7 +35,8 @@ class TestApplications:
 
     def test_open_application_details_page(self):
         self.applications_page.open_application_details_page()
-        expect(self.page).to_have_url("https://demo-01.wge.dev.weave.works/kustomization/details?clusterName=management&name=canaries&namespace=flux-system")
+        expect(self.page).to_have_url("https://demo-01.wge.dev.weave.works/kustomization/"
+                                      "details?clusterName=management&name=canaries&namespace=flux-system")
 
     def test_open_application_yaml(self):
         self.applications_page.open_application_yaml_tab()
@@ -42,7 +45,8 @@ class TestApplications:
     # page.pause()
     def test_open_application_violations_page(self):
         self.applications_page.open_application_violations_tab()
-        expect(self.page).to_have_url("https://demo-01.wge.dev.weave.works/kustomization/violations?clusterName=management&name=canaries&namespace=flux-system")
+        expect(self.page).to_have_url("https://demo-01.wge.dev.weave.works/kustomization/"
+                                      "violations?clusterName=management&name=canaries&namespace=flux-system")
 
 
     def test_open_application_violations_details(self):

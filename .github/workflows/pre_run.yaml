@@ -1,0 +1,120 @@
+name: "Before run nightly"
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: "The type of machine to run the job on e.g macOS-latest or ubuntu-latest"
+        required: true
+        type: string
+      os-name:
+        description: "`linux` or `darwin`"
+        required: true
+        type: string
+      timeout-minutes:
+        description: "The maximum number of minutes to let a job run before GitHub automatically cancels it"
+        required: true
+        type: number
+
+jobs:
+  Pre_tests:
+    runs-on: ${{ inputs.runs-on }}
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    steps:
+      - name: Install AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+      - name: Install eksctl
+        run: |
+          curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+          sudo mv /tmp/eksctl /usr/local/bin
+          eksctl version
+          eksctl get clusters
+      - name: Install flux
+        run: |
+          curl --silent --location https://github.com/fluxcd/flux2/releases/download/v0.36.0/flux_0.36.0_${{ inputs.os-name }}_amd64.tar.gz | tar xz -C /tmp
+          sudo mv /tmp/flux /usr/local/bin
+          flux version --client
+      - name: Install aws-cli
+        if: ${{ inputs.management-cluster-kind == 'eks' }}
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install --update
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+              curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+              sudo installer -pkg AWSCLIV2.pkg -target /
+          fi
+          aws --version
+      - name: Install aws-iam-authenticator
+        run: |
+          wget --no-verbose https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.5.7/aws-iam-authenticator_0.5.7_${{ inputs.os-name }}_amd64 -O /tmp/aws-iam-authenticator
+          chmod +x /tmp/aws-iam-authenticator
+          sudo mv /tmp/aws-iam-authenticator /usr/local/bin
+          aws-iam-authenticator version
+
+      - name: Install chromedriver
+        if: ${{ (runner.os == 'Linux') && (inputs.git-provider_hostname == 'gitlab.com') }}
+        run: |
+          # It is not possible to fake webdriver/bot as a real user with latest chromedriver version (> 105.0.5195.52) for gitlab saas provider.
+          wget --no-verbose https://chromedriver.storage.googleapis.com/105.0.5195.52/chromedriver_${{ inputs.os-name }}64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin
+          chromedriver --version
+      - name: Install chrome browser
+        if: ${{ (runner.os == 'Linux') && (inputs.git-provider_hostname == 'gitlab.com') }}
+        run: |
+          # It is not possible to fake webdriver/bot as a real user with latest chrome browser version (> 105.0.5195.52) for gitlab saas provider.
+          wget --no-verbose -O google-chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_105.0.5195.102-1_amd64.deb
+          sudo apt install --allow-downgrades -y ./google-chrome.deb
+          google-chrome --version
+      - name: Setup selenium server
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          wget --no-verbose https://selenium-release.storage.googleapis.com/3.14/selenium-server-standalone-3.14.0.jar
+
+          # Start selenium server in standalone mode
+          xvfb-run -a --server-args="-screen 0 1280x1024x24" java -jar ./selenium-server-standalone-3.14.0.jar &
+
+      - name: Setup management cluster
+        run: |
+          if [ ${{ inputs.management-cluster-kind }} = 'eks' ]; then
+            export CLUSTER_NAME=wego-enterprise-nightly-eks-${{ inputs.os-name }}
+            export CLUSTER_REGION=us-east-1
+
+          elif [ ${{ inputs.management-cluster-kind }} = 'gke' ]; then
+            export CLUSTER_NAME=wego-enterprise-nightly-gke-${{ inputs.os-name }}
+            export CLUSTER_REGION=us-central1-a
+
+          elif [ ${{ inputs.management-cluster-kind }} = 'kind' ]; then
+            export CLUSTER_NAME=management-${{ github.run_id }}-${{ github.run_number}}
+          fi
+
+          ./test/utils/scripts/mgmt-cluster-setup.sh  ${{ inputs.management-cluster-kind }} $(pwd) $CLUSTER_NAME $CLUSTER_REGION
+      - name: Run Acceptance tests
+        run: |
+          export CLUSTER_REPOSITORY=gitops-capi-template-${{ github.run_id }}-$(openssl rand -hex 8)
+
+          if [ ${{ env.GIT_PROVIDER }} == "gitlab" ] && [ ${{ env.GIT_PROVIDER_HOSTNAME }} != "gitlab.com" ]; then
+            export WEAVE_GITOPS_GIT_HOST_TYPES="${{ env.GIT_PROVIDER_HOSTNAME }}=gitlab"
+            export GITLAB_HOSTNAME=${{ env.GIT_PROVIDER_HOSTNAME }}
+          fi
+
+          ginkgo ${{ inputs.label-filter }} --v --output-dir=${{ env.ARTIFACTS_BASE_DIR }} --junit-report=${{ env.TEST_ARTIFACT_NAME }}.xml --timeout=2h test/acceptance/test/
+      - name: Store test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: ${{ env.TEST_ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACTS_BASE_DIR }}
+          retention-days: 3
+      - name: Reset management cluster
+        if: ${{ always() }}
+        continue-on-error: true
+        run: |
+          if [ ${{ inputs.management-cluster-kind }} = "eks" ] || [ ${{ inputs.management-cluster-kind }} = "gke" ]; then
+            ./test/utils/scripts/wego-enterprise.sh reset
+          fi
