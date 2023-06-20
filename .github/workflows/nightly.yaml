@@ -62,8 +62,7 @@ jobs:
 
     - name: Install flux
       run: |
-        curl --silent --location https://github.com/fluxcd/flux2/releases/download/v0.36.0/flux_0.36.0_${{ inputs.os-name }}_amd64.tar.gz | tar xz -C /tmp
-        sudo mv /tmp/flux /usr/local/bin
+        curl -s https://fluxcd.io/install.sh | sudo bash
         flux version --client
 
     - name: Install aws-iam-authenticator
