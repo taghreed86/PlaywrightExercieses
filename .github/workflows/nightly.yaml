@@ -11,7 +11,7 @@ on:
 permissions:
   contents: read
 jobs:
-  build_and_test:
+  build_and_run-tests:
 
     runs-on: ubuntu-latest
 
@@ -67,8 +67,8 @@ jobs:
 
     - name: Install aws-iam-authenticator
       run: |
-        wget --no-verbose https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.5.7/aws-iam-authenticator_0.5.7_${{ inputs.os-name }}_amd64 -O /tmp/aws-iam-authenticator
-        chmod +x /tmp/aws-iam-authenticator
+        curl -Lo aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.5.9/aws-iam-authenticator_0.5.9_linux_amd64
+        chmod +x ./aws-iam-authenticator
         sudo mv /tmp/aws-iam-authenticator /usr/local/bin
         aws-iam-authenticator version
 
