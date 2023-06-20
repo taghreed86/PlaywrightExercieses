@@ -2,9 +2,9 @@ name: nightly
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main","run_tests_using_cluster_config"]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main","run_tests_using_cluster_config" ]
   schedule:
     - cron: "30 22 * * *"
 
@@ -12,11 +12,8 @@ permissions:
   contents: read
 jobs:
   build_and_test:
-  uses: ./.github/workflows/pre_run.yaml
-  with:
+
     runs-on: ubuntu-latest
-    os-name: linux
-    timeout-minutes: 60
 
     steps:
     - uses: actions/checkout@v3
@@ -30,17 +27,72 @@ jobs:
         pip install flake8 pytest
         pip install pytest_dotenv
         pip install pytest-reporter-html1
-    - name: Install playwright and chromium
+
+    - name: Install aws cli
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+        fi
+        aws --version
+
+    - name: Install eksctl
+      run: |
+        curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+        sudo mv /tmp/eksctl /usr/local/bin
+        eksctl version
+        eksctl get clusters
+
+    - name: Install direnv
+      run: |
+        sudo apt install direnv
+        fi
+        direnv --version
+
+    - name: Install npm
+      run: |
+        sudo apt update 
+        sudo apt install Node.js 
+        sudo apt install npm
+        fi
+        Node.js -v && npm --version 
+
+    - name: Install gsts
+      run: |
+        npm install --global gsts
+        
+    - name: Install pre-commit
+      run: |
+        pip install pre-commit
+
+    - name: Install flux
+      run: |
+        curl --silent --location https://github.com/fluxcd/flux2/releases/download/v0.36.0/flux_0.36.0_${{ inputs.os-name }}_amd64.tar.gz | tar xz -C /tmp
+        sudo mv /tmp/flux /usr/local/bin
+        flux version --client
+
+    - name: Install aws-iam-authenticator
+      run: |
+        wget --no-verbose https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v0.5.7/aws-iam-authenticator_0.5.7_${{ inputs.os-name }}_amd64 -O /tmp/aws-iam-authenticator
+        chmod +x /tmp/aws-iam-authenticator
+        sudo mv /tmp/aws-iam-authenticator /usr/local/bin
+        aws-iam-authenticator version
+
+    - name: Install playwright
       run: |
         pip install pytest-playwright
+
+    - name: Install chromium
+      run: |
         playwright install chromium
-       
+
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html -o junit_family=xunit2 --junitxml=test-results/junit_tests_report.xml
