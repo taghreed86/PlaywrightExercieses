@@ -101,6 +101,7 @@ jobs:
 
     - name: Download test artifacts
       uses: actions/download-artifact@v3.0.1
+      if: success() || failure()
       with:
         name: test-report
         path: test-results
