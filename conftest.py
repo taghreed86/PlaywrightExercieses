@@ -4,9 +4,13 @@ from playwright.sync_api import Playwright, sync_playwright, expect
 import pytest
 from pages.login_page import Login
 
-URL = os.environ["URL"]
+WGE_CNAME = os.environ["MANAGEMENT_CLUSTER_CNAME"] or "localhost"
+NODEPORT = os.environ["UI_NODEPORT"] or "30080"
+
+URL = f"https://{WGE_CNAME}:{NODEPORT}"
+
 USER_NAME = os.environ["USER_NAME"]
-PASSWORD = os.environ["PASSWORD"]
+PASSWORD = os.environ["CLUSTER_ADMIN_PASSWORD"]
 
 
 @pytest.fixture(scope="session")
@@ -22,7 +26,7 @@ def setup(playwright: Playwright):
     login_page.get_user_name_textbox().fill(USER_NAME)
     login_page.get_password_textbox().fill(PASSWORD)
     login_page.get_continue_button().click()
-    expect(page).to_have_url("https://demo-01.wge.dev.weave.works/clusters/list")
+    expect(page).to_have_url("https://{URL}/clusters/list")
 
     yield context
     context.tracing.stop(path="test-results/execution-tracing.zip")
@@ -37,7 +41,3 @@ def login(setup):
     page = context.new_page()
     page.goto(URL)
     yield page
-
-
-
-
