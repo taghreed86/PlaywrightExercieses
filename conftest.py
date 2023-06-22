@@ -4,8 +4,8 @@ from playwright.sync_api import Playwright, sync_playwright, expect
 import pytest
 from pages.login_page import Login
 
-WGE_CNAME = os.environ["MANAGEMENT_CLUSTER_CNAME"] or "30080"
-NODEPORT = os.environ["UI_NODEPORT"] or "localhost"
+WGE_CNAME = os.environ["MANAGEMENT_CLUSTER_CNAME"] or "localhost"
+NODEPORT = os.environ["UI_NODEPORT"] or "30080"
 
 URL = f"https://{WGE_CNAME}:{NODEPORT}"
 

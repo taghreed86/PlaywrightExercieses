@@ -4,8 +4,9 @@ from pages.application_page import Applications
 import pytest
 import os
 
-WGE_CNAME = os.environ["MANAGEMENT_CLUSTER_CNAME"] or "30080"
-NODEPORT = os.environ["UI_NODEPORT"] or "localhost"
+
+WGE_CNAME = os.environ["MANAGEMENT_CLUSTER_CNAME"] or "localhost"
+NODEPORT = os.environ["UI_NODEPORT"] or "30080"
 
 URL = f"https://{WGE_CNAME}:{NODEPORT}"
 
