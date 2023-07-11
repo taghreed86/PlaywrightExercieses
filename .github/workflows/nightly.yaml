@@ -94,7 +94,7 @@ jobs:
         export AWS_ROLE_EKS="arn:aws:iam::894516026745:role/WeaveEksEditor"
         export GOOGLE_IDP_ID=C0203uytv
         export GOOGLE_SP_ID=656726301855
-        gsts --aws-role-arn "$AWS_ROLE_EKS" --sp-id "$GOOGLE_SP_ID" --idp-id "$GOOGLE_IDP_ID" --username tagreed.anany@weave.works
+        gsts --aws-region="eu-north-1" --aws-role-arn "$AWS_ROLE_EKS" --sp-id "$GOOGLE_SP_ID" --idp-id "$GOOGLE_IDP_ID" --username tagreed.anany@weave.works
 
     - name: run tests
       run: |
