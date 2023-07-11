@@ -90,8 +90,11 @@ jobs:
 
     - name: Authenticate with WeaveEksEditor role
       run: |
-        export GOOGLE_USERNAME=tagreed.anany@weave.works
-        source ./env.sh
+        export AWS_PROFILE=sts
+        export AWS_ROLE_EKS="arn:aws:iam::894516026745:role/WeaveEksEditor"
+        export GOOGLE_IDP_ID=C0203uytv
+        export GOOGLE_SP_ID=656726301855
+        gsts --aws-role-arn "$AWS_ROLE_EKS" --sp-id "$GOOGLE_SP_ID" --idp-id "$GOOGLE_IDP_ID" --username tagreed.anany@weave.works
 
     - name: run tests
       run: |
