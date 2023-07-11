@@ -88,6 +88,11 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
+    - name: Authenticate with WeaveEksEditor role
+      run: |
+        export GOOGLE_USERNAME=tagreed.anany@weave.works
+        source ./env.sh
+
     - name: run tests
       run: |
         pytest -s -v --video=retain-on-failure --screenshot=only-on-failure --template=html1/index.html --report=test-results/report.html -o junit_family=xunit2 --junitxml=test-results/junit_tests_report.xml
