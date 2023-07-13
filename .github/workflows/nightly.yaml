@@ -88,6 +88,12 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
+    - name: Clone cluster-config repository
+      uses: actions/checkout@v2
+      with:
+        repository: weaveworks/clusters-config
+        ref: main
+
     - name: Authenticate with WeaveEksEditor role
       run: |
         export GOOGLE_USERNAME=tagreed.anany@weave.works
